@@ -1,0 +1,52 @@
+# Titanic MLOps Pipeline
+
+A modular, automated ML training pipeline for the Titanic survival prediction dataset.
+
+## Project Structure
+
+```
+titanic-mlops-pipeline/
+├── data/
+│   ├── train.csv
+│   └── test.csv
+├── models/              # Saved model files (.joblib)
+├── reports/             # Evaluation reports
+├── src/
+│   ├── data.py          # Data loading
+│   ├── models.py        # Model definitions
+│   ├── preprocess.py    # Feature preprocessing pipeline
+│   ├── train.py         # Training and saving logic
+│   └── evaluate.py      # Evaluation and report generation
+├── main.py              # Entry point
+├── requirements.txt
+└── README.md
+```
+
+## Setup
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+python main.py
+```
+
+This will:
+1. Load and split the Titanic training data
+2. Preprocess features (imputation, scaling, encoding)
+3. Train Logistic Regression and Random Forest classifiers
+4. Print accuracy for each model
+5. Save models to `models/` and reports to `reports/`
+
+## Models
+
+- **Logistic Regression** — baseline linear classifier
+- **Random Forest** — ensemble tree-based classifier
+
+## Features Used
+
+- `Age`, `Fare` — numerical (mean imputation + standard scaling)
+- `Sex`, `Embarked`, `Pclass` — categorical (most-frequent imputation + one-hot encoding)

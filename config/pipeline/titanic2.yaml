@@ -1,0 +1,16 @@
+data:
+  raw_data_path: data/train.csv
+  test_size: 0.15
+  random_state: 123
+
+model:
+  model_path: models
+  log_reg:
+    max_iter: 2000
+    random_state: ${pipeline.data.random_state}
+  rf:
+    n_estimators: 200
+    random_state: ${pipeline.data.random_state}
+
+evaluate:
+  reports_path: reports

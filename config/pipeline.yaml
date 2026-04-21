@@ -1,0 +1,14 @@
+# config/pipeline.yaml
+data:
+  path: data/train.csv
+  test_size: 0.2
+  random_state: 42
+
+model:
+  model_path: models
+
+training:
+  log_reg:
+    max_iter: 1000
+  rf:
+    n_estimators: 100

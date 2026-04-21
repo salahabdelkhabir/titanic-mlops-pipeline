@@ -1,13 +1,14 @@
 from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
+
+NUM_FEATURES = ["Age", "Fare"]
+CAT_FEATURES = ["Sex", "Embarked", "Pclass"]
 
 
-def build_preprocessor():
-    num_features = ["Age", "Fare"]
-    cat_features = ["Sex", "Embarked", "Pclass"]
-
+def build_preprocessor() -> ColumnTransformer:
+    """Build and return the feature preprocessing pipeline."""
     num_pipeline = Pipeline(
         [
             ("imputer", SimpleImputer(strategy="mean")),
@@ -24,8 +25,8 @@ def build_preprocessor():
 
     preprocessor = ColumnTransformer(
         [
-            ("num", num_pipeline, num_features),
-            ("cat", cat_pipeline, cat_features),
+            ("num", num_pipeline, NUM_FEATURES),
+            ("cat", cat_pipeline, CAT_FEATURES),
         ]
     )
 
