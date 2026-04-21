@@ -1,58 +1,34 @@
-import joblib
-import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+from src.data import load_data
+from src.models import get_models
+from src.preprocess import build_preprocessor
+from src.train import train_and_save
 
 
 def main():
-    df = pd.read_csv("data/train.csv")
+    df = load_data("data/train.csv")
 
     X = df.drop("Survived", axis=1)
     y = df["Survived"]
-
-    num_features = ["Age", "Fare"]
-    cat_features = ["Sex", "Embarked", "Pclass"]
-
-    num_pipeline = Pipeline(
-        [("imputer", SimpleImputer(strategy="mean")), ("scaler", StandardScaler())]
-    )
-
-    cat_pipeline = Pipeline(
-        [
-            ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("encoder", OneHotEncoder(handle_unknown="ignore")),
-        ]
-    )
-
-    preprocessor = ColumnTransformer(
-        [("num", num_pipeline, num_features), ("cat", cat_pipeline, cat_features)]
-    )
-
-    models = {
-        "log_reg": LogisticRegression(max_iter=1000),
-        "rf": RandomForestClassifier(),
-    }
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
+    preprocessor = build_preprocessor()
+    models = get_models()
+
     for name, model in models.items():
-        pipeline = Pipeline([("preprocessor", preprocessor), ("model", model)])
-
-        pipeline.fit(X_train, y_train)
-        preds = pipeline.predict(X_test)
-
-        acc = accuracy_score(y_test, preds)
-        print(f"{name}: {acc}")
-
-        joblib.dump(pipeline, f"models/{name}.joblib")
+        train_and_save(
+            model,
+            preprocessor,
+            X_train,
+            y_train,
+            X_test,
+            y_test,
+            name,
+        )
 
 
 if __name__ == "__main__":
